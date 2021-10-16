@@ -1,0 +1,33 @@
+version: "3.8"
+
+services:
+  app:
+    build: ./
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./app:/app
+    entrypoint: ["./run.sh"]
+    environment:
+      - DB_NAME=django-rest-api
+      - DB_USER=root
+      - DB_PASSWORD=root
+      - DB_HOST=db
+      - DB_PORT=3306
+    networks:
+      - applicationNetwork
+    depends_on:
+      - db
+
+  db:
+    image: mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=django-rest-api
+    networks:
+      - applicationNetwork
+
+
+
+networks: 
+    applicationNetwork:
