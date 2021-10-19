@@ -1,5 +1,5 @@
 from rest_framework import authentication, permissions
-from rest_framework.generics import RetrieveUpdateAPIView,CreateAPIView
+from rest_framework.generics import RetrieveUpdateAPIView
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.settings import api_settings
 
@@ -25,4 +25,3 @@ class UserDetailsAPIView(RetrieveUpdateAPIView):
     def get_object(self):
         """Retrieve and return authentication user"""
         return self.request.user
-

@@ -8,9 +8,6 @@ from rest_framework import status
 from rest_framework.test import APIClient
 
 
-from .serializers import UserSerializer
-
-
 CREATE_TOKEN_URL = reverse('users:token-create')
 USER_DETAILS_URL = reverse('users:user-details')
 
@@ -43,7 +40,8 @@ class UsersApiTests(TestCase):
 
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
 
-        self.assertEqual({'non_field_errors': ['Unable to log in with provided credentials.']},
+        self.assertEqual({'non_field_errors':
+                          ['Unable to log in with provided credentials.']},
                          json.loads(res.content))
 
     def test_token_is_valid(self):
@@ -56,7 +54,8 @@ class UsersApiTests(TestCase):
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertIn('token', res.data)
 
-        self.client = APIClient(HTTP_AUTHORIZATION='Token ' + res.data['token'])
+        self.client = APIClient(
+            HTTP_AUTHORIZATION='Token ' + res.data['token'])
         res = self.client.get(USER_DETAILS_URL)
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)

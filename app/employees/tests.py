@@ -29,10 +29,14 @@ def sample_department(name='TEST', description='TEST DEPARTMENT'):
     return Department.objects.create(name=name, description=description)
 
 
-def sample_employee(first_name, last_name, email, salary, hired_at, department, is_manager):
+def sample_employee(first_name, last_name, email,
+                    salary, hired_at, department, is_manager):
     """Create and return a sample employee"""
-    return Employee.objects.create(first_name=first_name, last_name=last_name, email=email,
-                                   salary=salary, hired_at=hired_at, department=department, is_manager=is_manager)
+    return Employee.objects.create(first_name=first_name, last_name=last_name,
+                                   email=email, salary=salary,
+                                   hired_at=hired_at,
+                                   department=department,
+                                   is_manager=is_manager)
 
 
 class PublicEmployeesApiTests(TestCase):
@@ -96,8 +100,10 @@ class PrivateEmployeesApiTests(TestCase):
     def test_create_employee_successful(self):
         """Test creating a new employee"""
         department = sample_department('IT', 'IT DEPARTMENT')
-        payload = {'first_name': 'Test', 'last_name': 'Name', 'email': 'test@email.com',
-                   'salary': 7500.0, 'hired_at': timezone.now(), 'department': department.id,
+        payload = {'first_name': 'Test', 'last_name': 'Name',
+                   'email': 'test@email.com',
+                   'salary': 7500.0, 'hired_at': timezone.now(),
+                   'department': department.id,
                    'is_manager': False}
         self.super_client.post(EMPLOYEES_URL, payload)
 
@@ -108,8 +114,10 @@ class PrivateEmployeesApiTests(TestCase):
 
     def test_employee_required_fields(self):
         """Test employee some fields are required"""
-        payload = {'first_name': 'Test', 'last_name': 'Name', 'email': 'test@email.com',
-                   'salary': '', 'hired_at': timezone.now(), 'department': '',
+        payload = {'first_name': 'Test', 'last_name': 'Name',
+                   'email': 'test@email.com',
+                   'salary': '', 'hired_at': timezone.now(),
+                   'department': '',
                    'is_manager': False}
         res = self.super_client.post(EMPLOYEES_URL, payload)
 
@@ -155,8 +163,10 @@ class PrivateEmployeesApiTests(TestCase):
                                    7500.0, timezone.now(), department, False)
 
         url = detail_url(employee.id)
-        payload = {'first_name': 'Test', 'last_name': 'Name', 'email': 'test@email.com',
-                   'salary': 8000.0, 'hired_at': timezone.now(), 'department': department.id,
+        payload = {'first_name': 'Test', 'last_name': 'Name',
+                   'email': 'test@email.com',
+                   'salary': 8000.0, 'hired_at': timezone.now(),
+                   'department': department.id,
                    'is_manager': True}
 
         res = self.super_client.put(url, payload)
@@ -204,7 +214,8 @@ class EmployeePictureUploadTests(TestCase):
         self.super_client.force_authenticate(self.super_user)
         department = sample_department('IT', 'IT DEPARTMENT')
         self.employee = sample_employee('John', 'Simth', 'john@test.com',
-                                        7500.0, timezone.now(), department, False)
+                                        7500.0, timezone.now(),
+                                        department, False)
 
     def tearDown(self):
         self.employee.picture.delete()
@@ -216,7 +227,8 @@ class EmployeePictureUploadTests(TestCase):
             img = Image.new('RGB', (10, 10))
             img.save(temp, format='JPEG')
             temp.seek(0)
-            res = self.super_client.patch(url, {'picture': temp}, format='multipart')
+            res = self.super_client.patch(
+                url, {'picture': temp}, format='multipart')
 
         self.employee.refresh_from_db()
         self.assertEqual(res.status_code, status.HTTP_200_OK)
@@ -226,6 +238,7 @@ class EmployeePictureUploadTests(TestCase):
     def test_upload_picture_bad_request(self):
         """Test uploading an invalid picture"""
         url = detail_url(self.employee.id)
-        res = self.super_client.patch(url, {'picture': 'notimage'}, format='multipart')
+        res = self.super_client.patch(
+            url, {'picture': 'notimage'}, format='multipart')
 
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
