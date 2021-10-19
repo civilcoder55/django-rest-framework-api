@@ -36,7 +36,7 @@ def sample_employee(first_name, last_name, email, salary, hired_at, department, 
 
 
 class PublicEmployeesApiTests(TestCase):
-    """Test thje publicly available employees API"""
+    """Test the publicly available employees API"""
 
     def setUp(self):
         self.client = APIClient()

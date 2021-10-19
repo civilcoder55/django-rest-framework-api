@@ -24,7 +24,7 @@ def sample_department(name='TEST', description='TEST DEPARTMENT'):
 
 
 class PublicDepartmentsApiTests(TestCase):
-    """Test thje publicly available departments API"""
+    """Test the publicly available departments API"""
 
     def setUp(self):
         self.client = APIClient()
