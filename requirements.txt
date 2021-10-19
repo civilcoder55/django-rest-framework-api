@@ -3,3 +3,4 @@ djangorestframework
 Pillow
 flake8
 mysqlclient
+drf_yasg
